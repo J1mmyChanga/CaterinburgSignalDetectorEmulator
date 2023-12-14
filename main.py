@@ -8,6 +8,8 @@ app = Flask(__name__)
 os.mkdir("database")
 global_init('database/querystate.db')
 session = create_session()
+session.add(QueryState(state_yellow=False, state_red=False))
+session.commit()
 
 
 @app.route('/new_signal', methods=['POST'])

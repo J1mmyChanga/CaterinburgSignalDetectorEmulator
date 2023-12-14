@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, jsonify, request
 from data.db_session import *
-from data.models import QueryState
+from data.query_state_model import QueryState
 
 app = Flask(__name__)
 os.mkdir("database")
@@ -27,6 +27,24 @@ def new_signal():
 def get_state():
     res = {}
     query_state = session.query(QueryState).first()
+    res['state_yellow'] = query_state.state_yellow
+    res['state_red'] = query_state.state_red
+    return jsonify(res)
+
+
+@app.route('/get_users', methods=['GET'])
+def get_state():
+    res = {}
+    query_state = session.query(QueryState).first()
+    res['state_yellow'] = query_state.state_yellow
+    res['state_red'] = query_state.state_red
+    return jsonify(res)
+
+
+@app.route('/get_offices', methods=['GET'])
+def get_state():
+    res = {}
+    query_state = session.query(Offices).first()
     res['state_yellow'] = query_state.state_yellow
     res['state_red'] = query_state.state_red
     return jsonify(res)

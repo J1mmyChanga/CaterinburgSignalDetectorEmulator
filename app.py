@@ -37,6 +37,7 @@ def get_state():
     res['new_state_red'] = queue_state.new_state_red
     queue_state.old_state_yellow = queue_state.new_state_yellow
     queue_state.old_state_yellow = queue_state.new_state_red
+    session.commit()
     session.close()
     return jsonify(res)
 

@@ -27,14 +27,16 @@ def new_signal():
     return jsonify(res)
 
 
-@app.route('/get_state', methods=['GET'])
+@app.route('/get_state', methods=['GET', 'POST'])
 def get_state():
     res = {}
-    query_state = session.query(QueryState).first()
-    res['old_state_yellow'] = query_state.old_state_yellow
-    res['old_state_red'] = query_state.old_state_red
-    res['new_state_yellow'] = query_state.new_state_yellow
-    res['new_state_red'] = query_state.new_state_red
+    queue_state = session.query(QueryState).first()
+    res['old_state_yellow'] = queue_state.old_state_yellow
+    res['old_state_red'] = queue_state.old_state_red
+    res['new_state_yellow'] = queue_state.new_state_yellow
+    res['new_state_red'] = queue_state.new_state_red
+    queue_state.old_state_yellow = queue_state.new_state_yellow
+    queue_state.old_state_yellow = queue_state.new_state_red
     session.close()
     return jsonify(res)
 

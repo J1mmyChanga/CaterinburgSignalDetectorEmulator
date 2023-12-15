@@ -18,8 +18,6 @@ def new_signal():
     res = {'status': 'ok'}
     state_yellow, state_red = request.json['first'], request.json['second']
     q_state = session.get(QueryState, 1)
-    q_state.old_state_yellow = q_state.new_state_yellow
-    q_state.old_state_red = q_state.new_state_red
     q_state.new_state_red = state_red
     q_state.new_state_yellow = state_yellow
     session.commit()

@@ -9,7 +9,7 @@ if not os.path.isdir("database"):
     os.mkdir("database")
 global_init('database/queue_state.db')
 session = create_session()
-session.add(QueryState(state_yellow=False, state_red=False))
+session.add(QueryState(old_state_yellow=False, old_state_red=False, new_state_yellow=False, new_state_red=False))
 session.commit()
 
 
@@ -18,8 +18,10 @@ def new_signal():
     res = {'status': 'ok'}
     state_yellow, state_red = request.json['first'], request.json['second']
     q_state = session.get(QueryState, 1)
-    q_state.state_yellow = state_yellow
-    q_state.state_red = state_red
+    q_state.old_state_yellow = q_state.new_state_yellow
+    q_state.old_state_red = q_state.new_state_red
+    q_state.new_state_red = state_red
+    q_state.new_state_yellow = state_yellow
     session.commit()
     session.close()
     return jsonify(res)
@@ -29,8 +31,10 @@ def new_signal():
 def get_state():
     res = {}
     query_state = session.query(QueryState).first()
-    res['state_yellow'] = query_state.state_yellow
-    res['state_red'] = query_state.state_red
+    res['old_state_yellow'] = query_state.old_state_yellow
+    res['old_state_red'] = query_state.old_state_red
+    res['new_state_yellow'] = query_state.new_state_yellow
+    res['new_state_red'] = query_state.new_state_red
     session.close()
     return jsonify(res)
 

@@ -5,8 +5,9 @@ from data.db_session import *
 from data.query_state_model import QueryState
 
 app = Flask(__name__)
-os.mkdir("database")
-global_init('database/querystate.db')
+if not os.path.isdir("database"):
+    os.mkdir("database")
+global_init('database/queue_state.db')
 session = create_session()
 session.add(QueryState(state_yellow=False, state_red=False))
 session.commit()
@@ -20,6 +21,7 @@ def new_signal():
     q_state.state_yellow = state_yellow
     q_state.state_red = state_red
     session.commit()
+    session.close()
     return jsonify(res)
 
 
@@ -29,24 +31,7 @@ def get_state():
     query_state = session.query(QueryState).first()
     res['state_yellow'] = query_state.state_yellow
     res['state_red'] = query_state.state_red
-    return jsonify(res)
-
-
-@app.route('/get_users', methods=['GET'])
-def get_state():
-    res = {}
-    query_state = session.query(QueryState).first()
-    res['state_yellow'] = query_state.state_yellow
-    res['state_red'] = query_state.state_red
-    return jsonify(res)
-
-
-@app.route('/get_offices', methods=['GET'])
-def get_state():
-    res = {}
-    query_state = session.query(Offices).first()
-    res['state_yellow'] = query_state.state_yellow
-    res['state_red'] = query_state.state_red
+    session.close()
     return jsonify(res)
 
 
